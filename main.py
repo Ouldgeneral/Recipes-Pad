@@ -12,15 +12,15 @@ def create_new_file():
   file=filedialog.asksaveasfilename(title="Enter new file name",filetypes=[('*','*')])
   file_container.delete('1.0',END)
   file_container.insert(INSERT,'')
-def save_file(file,file_content):
+def save_file():
   with open(file,'w') as the_file:
-    the_file.write(file_content)
-def read_file(container):
+    the_file.write(file_container.get('1.0',END))
+def read_file():
   global file
   file=filedialog.askopenfilename(title="Open file",filetypes=[('*','*')])
   with open(file,'r') as file:
-    container.delete('1.0',END)
-    container.insert(INSERT,file.read())
+    file_container.delete('1.0',END)
+    file_container.insert(INSERT,file.read())
 def commands(event,number):
   global file,file_container
   if number==1:return save_file(file,file_container.get())
