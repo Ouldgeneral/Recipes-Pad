@@ -4,6 +4,7 @@ from tkinter import*
 from tkinter import filedialog
 undo_stack=stack()
 redo_stack=stack()
+empty_stack=stack()
 file=''
 file_container=''
 def save_file_as():
@@ -11,10 +12,9 @@ def save_file_as():
   file=filedialog.asksaveasfilename(title="Enter file name",filetypes=[('*','*')])
   save_file(file,file_container.get('1.0',END))
 def clear_stack():
-    global undo_stack,redp_stack
-    while not undo_stack.empty() and not redo_satck.empty():
-      undo_stack.get()
-      redo_stack.get()
+    global undo_stack,redo_stack
+    redo_stack=empty_stack
+    undo_stack=empty_stack
 def create_new_file():
   clear_stack()
   global file
@@ -34,9 +34,9 @@ def read_file():
   with open(file,'r') as file:
     show_file(file)
 def line_count():
-  global undo_stack
   lines=sum(1 for line in file_container.get('1.0',END))
-  undo_stack.put(file_container.get('1.0',END))
+  lines=str(lines)
+  line['text']=lines
 def undo():
   global undo_stack,redo_stack
   if undo_stack.empty():return
@@ -60,10 +60,15 @@ my_buttons={'Save':save_file,'Read':read_file,'Save as':save_file_as,'New file':
 for button in my_buttons:
   button=Button(buttons_area,text=button,command=lambda i=my_buttons[button]:i())
   button.pack(side=LEFT,fill=BOTH,expand=YES)
+lines=Label(buttons_area,text='')
+lines.pack(side=LEFT)
+line_count()
+window.bind('<Return>',lambda event:line_count())
 window.bind('<Control-s>', lambda event:save_file())
 window.bind('<Control-o>', lambda event:read_file())
-window.bind('<Return>', lambda event:line_count())
+window.bind('<Return>', lambda event:undo_stack.put(file_container.get('1.0',END)))
 window.bind('<Control-z>',lambda event:undo())
 window.bind('<Control-y>',lambda event:redo())
+window.bind('<Control-n>',lambda event:create-new_file())
 window.mainloop()
     
