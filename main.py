@@ -24,7 +24,7 @@ def create_new_file():
 def save_file():
   with open(file,'w') as the_file:
     the_file.write(file_container.get('1.0',END))
-def show_file(file):
+def show_file():
   file_container.delete('1.0',END)
   file_container.insert(INSERT,file)
 def read_file():
@@ -32,7 +32,7 @@ def read_file():
   global file
   file=filedialog.askopenfilename(title="Open file",filetypes=[('*','*')])
   with open(file,'r') as file:
-    show_file(file)
+    show_file()
 def line_count():
   lines=sum(1 for line in file_container.get('1.0',END))
   lines=str(lines)
@@ -41,13 +41,19 @@ def undo():
   global undo_stack,redo_stack
   if undo_stack.empty():return
   text=undo_stack.get()
-  show_file(text)
+  swap(text)
   redo_stack.put(text)
+def swap(x):
+  global file
+  y=file
+  file=x
+  show_file()
+  file=y
 def redo():
   global undo_stack,redo_stack
   if redo_stack.empty():return
   text=redo_stack.get()
-  show_file(text)
+  swap(text)
   undo_stack.put(text)
 #Program main entry
 window=Tk()
