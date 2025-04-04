@@ -7,10 +7,23 @@ redo_stack=stack()
 empty_stack=stack()
 file=''
 file_container=''
+file_types={'txt':'PleinText','html':'HTML','htm','HTML','js':'JavaScript','java':'Java','cpp':'C++',
+            'c':'C','asm':'Assembly','css':'CSS','cs':'C#','php':'PHP','py':'Python','sh':'Shell'}
+def filetype():
+  file=file.split('/')
+  file=file[-1]
+  file=file.split('.')
+  window.title(f'{file[0]}-Recipe')
+  try:
+    type['text']=file_types[file[-1]]
+    type['fg']='green'
+  except KeyError:
+    type['text']='Unknown'
+    type['fg']='red'
 def save_file_as():
   global file
   file=filedialog.asksaveasfilename(title="Enter file name",filetypes=[('*','*')])
-  save_file(file,file_container.get('1.0',END))
+  save_file()
 def clear_stack():
     global undo_stack,redo_stack
     redo_stack=empty_stack
@@ -19,20 +32,24 @@ def create_new_file():
   clear_stack()
   global file
   file=filedialog.asksaveasfilename(title="Enter new file name",filetypes=[('*','*')])
-  file_container.delete('1.0',END)
-  file_container.insert(INSERT,'')
+  show_file()
 def save_file():
   with open(file,'w') as the_file:
     the_file.write(file_container.get('1.0',END))
 def show_file():
+  filetype()
   file_container.delete('1.0',END)
-  file_container.insert(INSERT,file)
+  try:
+    text=open(file,"r")
+    file_container.insert(INSERT,text.read())
+    text.close()
+  except FileNotFoundError:file_container.insert(INSERT,'')
+  except AttributeError:file_container.insert(INSERT,file)
 def read_file():
   clear_stack()
   global file
-  file=filedialog.askopenfilename(title="Open file",filetypes=[('*','*')])
-  with open(file,'r') as file:
-    show_file()
+  file=filedialog.askopenfilename(title="Open file",filetypes=[('*','*')]
+  show_file()
 def line_count():
   lines=sum(1 for line in file_container.get('1.0',END))
   lines=str(lines)
@@ -66,8 +83,10 @@ my_buttons={'Save':save_file,'Read':read_file,'Save as':save_file_as,'New file':
 for button in my_buttons:
   button=Button(buttons_area,text=button,command=lambda i=my_buttons[button]:i())
   button.pack(side=LEFT,fill=BOTH,expand=YES)
-lines=Label(buttons_area,text='')
-lines.pack(side=LEFT)
+line=Label(buttons_area,text='')
+line.pack(side=LEFT)
+type=Label(buttons_area,text='')
+type.pack(side=LEFT)
 line_count()
 window.bind('<Return>',lambda event:line_count())
 window.bind('<Control-s>', lambda event:save_file())
