@@ -26,7 +26,7 @@ def run():
   extension=filetype().lower()
   if extension=='py':return subprocess.run(['python',file])
   elif extension =='html' or extension =='htm':return subprocess.run(['start',file])
-  elif extension =='js':return subprocess.run(['node' file])
+  elif extension =='js':return subprocess.run(['node' ,file])
   elif extension=='sh':return subprocess.run(['bash' ,file])
   elif extension=='php':return subprocess.run(["php",file])
   else:
@@ -52,18 +52,21 @@ def filetype():
     type['fg']='red'
     return ''
 def save_file_as():
-  global file
-  file=filedialog.asksaveasfilename(title="Enter file name",filetypes=[('*','*')])
-  save_file()
+  file_check('Enter file name','save')
 def clear_stack():
     global undo_stack,redo_stack
     redo_stack=stack()
     undo_stack=stack()
 def create_new_file():
   clear_stack()
+  file_ckeck("Enter new file name",'show')
+def file_check(x,y):
   global file
-  file=filedialog.asksaveasfilename(title="Enter new file name",filetypes=[('*','*')])
-  show_file()
+  x=filedialog.asksaveasfilename(title=x,filetypes=[('*','*')])
+  if len(x)>0:
+    file=x
+    if y=='show':show_file()
+    if y=='save':save_file()
 def save_file():
   try:
       with open(file,'w') as the_file:
@@ -80,9 +83,7 @@ def show_file():
   except FileNotFoundError:file_container.insert(INSERT,'')
 def read_file():
   clear_stack()
-  global file
-  file=filedialog.askopenfilename(title="Open file",filetypes=[('*','*')])
-  show_file()
+  file_check("Open file",'show')
 def line_count():
   lines=len(file_container.get('1.0',END).splitlines())
   lines=str(lines)
@@ -132,5 +133,6 @@ window.bind('<Control-z>',lambda event:undo())
 window.bind('<Control-y>',lambda event:redo())
 window.bind('<Control-n>',lambda event:create_new_file())
 window.bind('<F5>',lambda event: run())
+window.bind('<BackSpace>',lambda event:line_count())
 window.mainloop()
     
