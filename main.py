@@ -100,20 +100,13 @@ def line_count():
   lines=str(lines)
   position=file_container.index('insert')
   line['text']=f'{position}/{lines}'
-def undo():
-  global undo_stack,redo_stack
-  if undo_stack.empty():return
+def undo_redo(x,y):
+  global x,y,file_container  
+  if x.empty():return
   current=file_container.get('1.0',END)
-  text=undo_stack.get()
+  text=x.get()
   update(text)
-  redo_stack.put(current)
-def redo():
-  global undo_stack,redo_stack
-  if redo_stack.empty():return
-  current=file_container.get('1.0',END)
-  text=redo_stack.get()
-  update(text)
-  undo_stack.put(current)
+  y.put(current)
 def update(text):
   file_container.delete('1.0',END)
   file_container.insert(INSERT,text)
@@ -141,8 +134,8 @@ line_count()
 window.bind('<Return>',lambda event:on_return(event))
 window.bind('<Control-s>', lambda event:save_file())
 window.bind('<Control-o>', lambda event:read_file())
-window.bind('<Control-z>',lambda event:undo())
-window.bind('<Control-y>',lambda event:redo())
+window.bind('<Control-z>',lambda event:undo_redo(undo_stack, redo_stack))
+window.bind('<Control-y>',lambda event:undo_redo(redo_stack,undo_stack))
 window.bind('<Control-n>',lambda event:create_new_file())
 window.bind('<F5>',lambda event: run())
 window.bind('<BackSpace>',lambda event:line_count())
