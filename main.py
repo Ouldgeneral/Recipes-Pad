@@ -98,7 +98,8 @@ def read_file():
 def line_count():
   lines=len(file_container.get('1.0',END).splitlines())
   lines=str(lines)
-  line['text']=lines
+  position=file_container.index('insert')
+  line['text']=f'{position}/{lines}'
 def undo():
   global undo_stack,redo_stack
   if undo_stack.empty():return
