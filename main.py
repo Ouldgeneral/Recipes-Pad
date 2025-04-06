@@ -20,9 +20,9 @@ def run():
               'cpp':f'g++ {file} -o {file_name}.out',
               'cs':f'csc {file}'}
   runners={
-              'java':f'java {path}{file_name}',
-              'c':f'./{path}{file_name}.out',
-              'cs':f'start {path}{file_name}'}
+              'java':f'java {path}.java',
+              'c':f'./{path}.out',
+              'cs':f'start {path}.exe'}
   extension=filetype().lower()
   if extension=='py':return subprocess.run(['python',file])
   elif extension =='html' or extension =='htm':return os.system(['start',file])
@@ -38,17 +38,14 @@ def run():
          box.showwarning('Error',f'Error:\n{e}')
 def filetype():
   global file_name,path
-  file_name=file.split('/')
-  path=file_name[:-1]
-  path='/'.join(path)+'/'
-  file_name=file_name[-1]
-  file_name=file_name.split('.')
-  window.title(f'{file_name[0]}-Recipe')
-  file_name=file_name[0]
+  path=os.path.splitext(file)[0]
+  file_name,extension=os.path.splitext(os.path.basename(file))
+  window.title(f'{file_name}-Recipe')
+  extension =extension.lstrip(".")
   try:
-    type['text']=file_types[file_name[-1]]
+    type['text']=file_types[extension]
     type['fg']='green'
-    return file_name[-1]
+    return extension
   except KeyError:
     type['text']='Unknown'
     type['fg']='red'
