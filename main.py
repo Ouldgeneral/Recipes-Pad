@@ -25,9 +25,10 @@ def run():
               'cs':f'start {path}.exe'}
   extension=filetype().lower()
   if extension=='py':return subprocess.run(['python',file])
-  elif extension =='html' or extension =='htm':return os.system(['start',file])
-  elif extension =='js':return os.system(['node' file])
-  elif extension=='sh':return os.system(['bash' ,file])
+  elif extension =='html' or extension =='htm':return subprocess.run(['start',file])
+  elif extension =='js':return subprocess.run(['node' file])
+  elif extension=='sh':return subprocess.run(['bash' ,file])
+  elif extension=='php':return subprocess.run(["php",file])
   else:
     try:
          os.system(compilers[extension])
