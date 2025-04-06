@@ -22,7 +22,7 @@ def run():
               'cpp':f'g++ {file} -o {file_name}.out',
               'cs':f'csc {file}'}
   runners={
-              'java':f'java {path}.java',
+              'java':f'java {path}',
               'c':f'./{path}.out',
               'cs':f'start {path}.exe'}
   extension=filetype().lower()
@@ -69,6 +69,7 @@ def file_check(x,y):
     file=x
     if y=='show':show_file()
     if y=='save':save_file()
+  filetype()
 def save_file():
   try:
       with open(file,'w') as the_file:
