@@ -5,6 +5,7 @@ from tkinter import filedialog
 from tkinter import messagebox as box
 import os
 import subprocess
+import platform
 undo_stack=stack()
 redo_stack=stack()
 file=''
@@ -20,10 +21,12 @@ def run():
               'java':f'javac {file}',
               'c':f'gcc {file} -o {file_name}.out',
               'cpp':f'g++ {file} -o {file_name}.out',
+              'asm':f'nasm -f elf64 {file} -o {file_name}.o',
               'cs':f'csc {file}'}
   runners={
               'java':f'java {path}',
               'c':f'./{path}.out',
+              'asm':f'ld {file_name}.o {file_name}',
               'cs':f'start {path}.exe'}
   extension=filetype().lower()
   if extension=='py':return subprocess.run(['python',file])
@@ -33,6 +36,11 @@ def run():
   elif extension=='php':return subprocess.run(["php",file])
   else:
     try:
+         if extension=='Linux':
+            os.system(compilers[extension])
+            os.system(runners[extension])
+            return os.system(f'./{file_name}')
+         else:return box.showwarning('Recipes  Pad  can compile Assembly\nonly on Linux ')
          os.system(compilers[extension])
          if extension=='c' or extension =='cpp':return subprocess.run(runners['c'])
          return subprocess.run(runners[extension])
