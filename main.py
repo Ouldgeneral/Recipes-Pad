@@ -14,6 +14,8 @@ path=''
 file_types={'txt':'PleinText','html':'HTML' ,'htm':'HTML','js':'JavaScript','java':'Java','cpp':'C++',
             'c':'C','asm':'Assembly','css':'CSS','cs':'C#','php':'PHP','py':'Python','sh':'Shell'}
 def run():
+  if len(file)<0:
+    return box.showwarning('File error','Empty or non existent file')
   compilers={
               'java':f'javac {file}',
               'c':f'gcc {file} -o {file_name}.out',
