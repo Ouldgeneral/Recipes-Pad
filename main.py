@@ -36,11 +36,12 @@ def run():
   elif extension=='php':return subprocess.run(["php",file])
   else:
     try:
-         if extension=='Linux':
-            os.system(compilers[extension])
-            os.system(runners[extension])
-            return os.system(f'./{file_name}')
-         else:return box.showwarning('Recipes  Pad  can compile Assembly\nonly on Linux ')
+         if extension=='asm':
+            if palatform.system()="Linux":
+              os.system(compilers[extension])
+              os.system(runners[extension])
+              return os.system(f'./{file_name}')
+            else:return box.showwarning('Recipes  Pad  can compile Assembly\nonly on Linux ')
          os.system(compilers[extension])
          if extension=='c' or extension =='cpp':return subprocess.run(runners['c'])
          return subprocess.run(runners[extension])
