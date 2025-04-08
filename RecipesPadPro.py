@@ -34,7 +34,7 @@ class Recipes:
     return functions[target_function]
   def open_file(self):
     self.file_name=filedialog.askopenfilename(title="Open file",filetypes=[('*','.*')])
-    if len(self.file_name)==0:return
+    if len(self.file_name)==0 or self.file_name=="":return
     with open(self.file_name,'r') as file:
       self.text_area.delete('1.0',END)
       self.text_area.insert(INSERT,file.read())
@@ -46,6 +46,6 @@ class Recipes:
       return 
   def save_as(self):
     self.file_name=filedialog.asksaveasfilename(title="Enter  file  name",filetypes=[('*','*')])
-    if len(self.file_name)==0:return 
+    if len(self.file_name)==0 or self.file_name=="":return box.showwarning("Empty file_name","file_name cannot be empty")
     self.save()
     
